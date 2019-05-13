@@ -1,0 +1,231 @@
+class BinarySearchTree<Type extends Comparable<Type>>  { 
+  
+    /* Class containing left and right child of current node and key value*/
+    class Node { 
+        Type key; 
+        Node left, right; 
+  
+        public Node(Type item) { 
+            key = item; 
+            left = right = null; 
+        }
+        
+        public Node(Type item, Node left, Node right) { 
+            key = item; 
+            this.left = left;
+            this.right = right;
+        }
+    }
+    
+    public int count = 0;
+    // Root of BST 
+    Node root; 
+  
+    // Constructor 
+    BinarySearchTree() {  
+        root = null;  
+    } 
+  
+    // This method mainly calls insertRec() 
+    void insert(Type key) { 
+       root = insertRec(root, key); 
+       count++;
+    } 
+      
+    /* A recursive function to insert a new key in BST */
+    Node insertRec(Node root, Type key) { 
+        /* If the tree is empty, return a new node */
+        if (root == null) { 
+            root = new Node(key); 
+            return root; 
+        } 
+  
+        /* Otherwise, recur down the tree */
+        if (key.compareTo(root.key) < 0) 
+        {
+            root.left = insertRec(root.left, key); 
+        }
+        else if (key.compareTo(root.key) >= 0) 
+        {
+            root.right = insertRec(root.right, key); 
+        }
+  
+        /* return the (unchanged) node pointer */
+        return root; 
+    } 
+  
+    // This method mainly calls InorderRec() 
+    void inorder()  { 
+       inorderRec(root); 
+    } 
+  
+    // A utility function to do inorder traversal of BST 
+    void inorderRec(Node root) { 
+        if (root != null) { 
+            inorderRec(root.left); 
+            System.out.println("Key: " + root.key); 
+            inorderRec(root.right); 
+        }
+    } 
+  
+    // This method mainly calls preOrderRec() 
+    void preOrder()  { 
+       preOrderRec(root); 
+    } 
+  
+    // A utility function to do inorder traversal of BST 
+    void preOrderRec(Node root) { 
+        if (root != null) { 
+            System.out.println("Key: " + root.key);
+            preOrderRec(root.left);
+            preOrderRec(root.right);
+        }
+    } 
+    
+    // This method mainly calls postOrderRec() 
+    void postOrder()  { 
+       postOrderRec(root); 
+    } 
+  
+    // A utility function to do inorder traversal of BST 
+    void postOrderRec(Node root) { 
+        if (root != null) { 
+            postOrderRec(root.left);
+            postOrderRec(root.right);
+            System.out.println("Key: " + root.key);
+        }
+    } 
+    
+    //If the key is found in the tree return it.
+    Type find(Type key){
+        //You probably want a find recursive call
+        return findRec(root, key);
+    }
+    
+    Type findRec(Node n, Type key)
+    {
+        if(n == null)
+            return null;
+            
+        if (n.key==key) 
+            return n.key; 
+        
+        
+        if (n.key.compareTo(key) > 0)     
+            return findRec(n.left, key);
+                
+        return findRec(n.right, key);
+    }
+    
+    //If the key is found in the tree return true. returns false otherwise
+    boolean contains(Type key){
+        return containsRec(root, key);
+    }
+    
+    boolean containsRec(Node n, Type key)
+    {
+        if(n == null)
+        {
+            return false;
+        }
+        if(n.key == key)
+        {
+            return true;
+        }
+        
+        boolean res1 = containsRec(n.left, key);
+        boolean res2 = containsRec(n.right, key);
+        
+        return res1 || res2;
+    }
+    
+    //Finds a node in the tree and removes it
+    void remove(Type key){
+        removeRec(this.root, key);   
+        this.count--;
+    }
+    
+    Node removeRec(Node n, Type key)
+    {
+        if (n == null)  
+            return null; 
+  
+        if (key.compareTo(n.key) < 0) 
+            n.left = removeRec(n.left, key); 
+        else if (key.compareTo(n.key) > 0) 
+            n.right = removeRec(n.right, key); 
+            
+        else
+        { 
+            if (n.left == null) 
+                return n.right; 
+            else 
+            {
+                if (n.right == null) 
+                    return n.left; 
+            }
+  
+            n.key = min(n.right); 
+            n.right = removeRec(n.right, n.key); 
+        } 
+  
+        return n; 
+    }
+    //The longest depth in tree
+    int height(){
+        //You probably want a recusive height function 
+        return height(root);
+    }
+    
+    int height(Node n)
+    {
+        if(n == null)
+            return -1
+            ;
+            
+        int left = height(n.left);
+        int right = height(n.right);
+        if(left > right)
+        {
+            return left + 1;
+        }
+        
+        return right + 1;
+    }
+    //Total nodes in tree
+    int size(){
+        //You probably want a recusive height function 
+        return this.count;
+    }
+    
+    //Finds and returns the max value in the tree
+    Type max(){
+        return max(this.root);
+    }
+    
+    Type max(Node n)
+    {
+        Type minv = n.key; 
+        while (n.right != null) 
+        { 
+            minv = n.right.key; 
+            n = n.right; 
+        } 
+        return minv; 
+    }
+    //Finds and returns the max value in the tree
+    Type min(){
+        return min(this.root);
+    }
+    
+    Type min(Node n)
+    {
+        Type minv = n.key; 
+        while (n.left != null) 
+        { 
+            minv = n.left.key; 
+            n = n.left; 
+        } 
+        return minv; 
+    }
+} 
